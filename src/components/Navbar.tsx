@@ -68,7 +68,7 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 right-0 left-0 z-40 transition-all duration-300 ${
         scrolled
-          ? "border-b border-white/5 bg-[#100900]/90 backdrop-blur-md"
+          ? "border-b border-white/5 bg-dark/90 backdrop-blur-md"
           : "bg-transparent"
       }`}
     >
@@ -107,7 +107,7 @@ export default function Navbar() {
         <a
           href="#contact"
           onClick={(e) => handleNavClick(e, "#contact")}
-          className="hidden rounded-full border border-gold px-5 py-2 text-sm font-semibold text-gold transition-all hover:bg-gold hover:text-[#100900] md:block"
+          className="hidden rounded-full border border-gold px-5 py-2 text-sm font-semibold text-gold transition-all hover:bg-gold hover:text-dark md:block"
         >
           Get Started
         </a>
@@ -149,7 +149,7 @@ export default function Navbar() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-white/5 bg-[#100900]/95 backdrop-blur-md md:hidden"
+            className="overflow-hidden border-t border-white/5 bg-dark/95 backdrop-blur-md md:hidden"
           >
             <div className="flex flex-col gap-4 px-4 py-6">
               {navLinks.map((link) => (
@@ -169,7 +169,7 @@ export default function Navbar() {
               <a
                 href="#contact"
                 onClick={(e) => handleNavClick(e, "#contact")}
-                className="mt-2 rounded-full border border-gold px-5 py-2 text-center text-sm font-semibold text-gold transition-all hover:bg-gold hover:text-[#100900]"
+                className="mt-2 rounded-full border border-gold px-5 py-2 text-center text-sm font-semibold text-gold transition-all hover:bg-gold hover:text-dark"
               >
                 Get Started
               </a>

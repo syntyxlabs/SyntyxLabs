@@ -81,7 +81,7 @@ export default function Contact() {
                 </div>
                 <button
                   type="submit"
-                  className="mx-auto rounded-full bg-gold px-8 py-3 font-semibold text-[#100900] transition-shadow hover:shadow-[0_0_30px_rgba(249,219,154,0.3)]"
+                  className="mx-auto rounded-full bg-gold px-8 py-3 font-semibold text-dark transition-shadow hover:shadow-[0_0_30px_rgba(249,219,154,0.3)]"
                 >
                   {submitted ? "Thanks! We'll be in touch." : "Send Message"}
                 </button>
