@@ -1,8 +1,6 @@
 "use client";
 
 import { useRef, useState, useCallback } from "react";
-
-import useIsTouchDevice from "@/hooks/useIsTouchDevice";
 import TiltCard from "./TiltCard";
 
 interface GlowCardProps {
@@ -11,23 +9,41 @@ interface GlowCardProps {
 }
 
 export default function GlowCard({ children, className = "" }: GlowCardProps) {
-  const isTouch = useIsTouchDevice();
   const cardRef = useRef<HTMLDivElement>(null);
   const [glowPosition, setGlowPosition] = useState({ x: 50, y: 50 });
-  const [isHovered, setIsHovered] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+
+  const updateGlowFromPoint = useCallback((clientX: number, clientY: number) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = ((clientX - rect.left) / rect.width) * 100;
+    const y = ((clientY - rect.top) / rect.height) * 100;
+    setGlowPosition({ x, y });
+  }, []);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      const card = cardRef.current;
-      if (!card) return;
-
-      const rect = card.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-      setGlowPosition({ x, y });
+      updateGlowFromPoint(e.clientX, e.clientY);
     },
-    []
+    [updateGlowFromPoint]
+  );
+
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      const touch = e.touches[0];
+      updateGlowFromPoint(touch.clientX, touch.clientY);
+      setIsActive(true);
+    },
+    [updateGlowFromPoint]
+  );
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      const touch = e.touches[0];
+      updateGlowFromPoint(touch.clientX, touch.clientY);
+    },
+    [updateGlowFromPoint]
   );
 
   return (
@@ -35,29 +51,25 @@ export default function GlowCard({ children, className = "" }: GlowCardProps) {
       <div
         ref={cardRef}
         className="relative overflow-hidden rounded-2xl"
-        onMouseMove={isTouch ? undefined : handleMouseMove}
-        onMouseEnter={isTouch ? undefined : () => setIsHovered(true)}
-        onMouseLeave={isTouch ? undefined : () => setIsHovered(false)}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsActive(true)}
+        onMouseLeave={() => setIsActive(false)}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={() => setIsActive(false)}
+        onTouchCancel={() => setIsActive(false)}
       >
-        {/* Cursor-following glow on desktop only */}
-        {!isTouch && (
-          <div
-            className="pointer-events-none absolute inset-0 rounded-2xl transition-opacity duration-500"
-            style={{
-              opacity: isHovered ? 1 : 0,
-              background: `radial-gradient(circle at ${glowPosition.x}% ${glowPosition.y}%, rgba(249, 219, 154, 0.3) 0%, transparent 50%)`,
-            }}
-          />
-        )}
-
-        {/* Card content with glass background — subtle static glow on mobile */}
+        {/* Glow that follows cursor OR finger */}
         <div
-          className={`relative rounded-2xl bg-white/[0.04] p-6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-md ${
-            isTouch
-              ? "border border-white/[0.12] shadow-[0_0_15px_rgba(249,219,154,0.05),inset_0_1px_0_0_rgba(255,255,255,0.05)]"
-              : "border border-white/[0.08]"
-          }`}
-        >
+          className="pointer-events-none absolute inset-0 rounded-2xl transition-opacity duration-300"
+          style={{
+            opacity: isActive ? 1 : 0,
+            background: `radial-gradient(circle at ${glowPosition.x}% ${glowPosition.y}%, rgba(249, 219, 154, 0.3) 0%, transparent 50%)`,
+          }}
+        />
+
+        {/* Card content with glass background */}
+        <div className="relative rounded-2xl border border-white/[0.08] bg-white/[0.04] p-6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-md">
           {children}
         </div>
       </div>

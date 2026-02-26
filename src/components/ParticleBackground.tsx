@@ -88,7 +88,7 @@ export default function ParticleBackground() {
   if (!init) return null;
 
   return (
-    <div className="fixed inset-0 z-0" style={{ touchAction: "auto" }}>
+    <div className="pointer-events-none fixed inset-0 z-0">
       <Particles
         id="constellation-particles"
         options={options}
