@@ -7,6 +7,7 @@ import type { ISourceOptions } from "@tsparticles/engine";
 
 export default function ParticleBackground() {
   const [init, setInit] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     initParticlesEngine(async (engine) => {
@@ -14,6 +15,7 @@ export default function ParticleBackground() {
     }).then(() => {
       setInit(true);
     });
+    setIsMobile(window.innerWidth < 768);
   }, []);
 
   const options: ISourceOptions = useMemo(
@@ -22,7 +24,7 @@ export default function ParticleBackground() {
       fpsLimit: 60,
       particles: {
         number: {
-          value: 100,
+          value: isMobile ? 60 : 100,
           density: {
             enable: true,
           },
@@ -45,7 +47,7 @@ export default function ParticleBackground() {
           enable: true,
           color: "#F9DB9A",
           opacity: 0.25,
-          distance: 180,
+          distance: isMobile ? 140 : 180,
           width: 1,
         },
         move: {
@@ -60,34 +62,33 @@ export default function ParticleBackground() {
         },
       },
       interactivity: {
+        detectsOn: "window",
         events: {
           onHover: {
             enable: true,
-            mode: ["grab", "repulse"],
+            mode: "grab",
           },
         },
         modes: {
           grab: {
-            distance: 250,
+            distance: isMobile ? 200 : 250,
             links: {
-              opacity: 0.6,
+              opacity: isMobile ? 0.8 : 0.6,
+              blink: false,
+              consent: false,
             },
-          },
-          repulse: {
-            distance: 100,
-            duration: 0.4,
           },
         },
       },
       detectRetina: true,
     }),
-    []
+    [isMobile]
   );
 
   if (!init) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-0">
+    <div className="fixed inset-0 z-0" style={{ touchAction: "auto" }}>
       <Particles
         id="constellation-particles"
         options={options}

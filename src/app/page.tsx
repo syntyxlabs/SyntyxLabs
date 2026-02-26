@@ -10,7 +10,7 @@ import CookieBanner from "@/components/CookieBanner";
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="relative z-10 min-h-screen">
       <Navbar />
       <Hero />
       <About />
