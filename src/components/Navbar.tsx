@@ -52,6 +52,18 @@ export default function Navbar() {
     return () => observer.disconnect();
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
   const handleNavClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
       e.preventDefault();
@@ -79,7 +91,7 @@ export default function Navbar() {
           onClick={(e) => handleNavClick(e, "#home")}
           className="text-xl font-semibold text-white"
         >
-          Syntyx Labs
+          Syntyx<span className="text-gold">{" "}Labs</span>
         </a>
 
         {/* Desktop nav links */}
@@ -141,39 +153,75 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile full-screen overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-white/5 bg-dark/95 backdrop-blur-md md:hidden"
+            className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-dark md:hidden"
           >
-            <div className="flex flex-col gap-4 px-4 py-6">
-              {navLinks.map((link) => (
-                <a
+            {/* Subtle radial gold glow behind the links */}
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(ellipse at 50% 40%, rgba(249,219,154,0.08) 0%, transparent 70%)",
+              }}
+            />
+
+            <nav className="relative z-10 flex flex-col items-center gap-8">
+              {navLinks.map((link, index) => (
+                <motion.a
                   key={link.href}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className={`text-lg transition-colors ${
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: 0.05 + index * 0.07,
+                    ease: "easeOut",
+                  }}
+                  className={`text-2xl font-medium tracking-wide transition-colors ${
                     activeSection === link.href.slice(1)
                       ? "text-gold"
                       : "text-gray-300 hover:text-white"
                   }`}
                 >
                   {link.label}
-                </a>
+                </motion.a>
               ))}
-              <a
+
+              {/* Prominent Get Started CTA */}
+              <motion.a
                 href="#contact"
                 onClick={(e) => handleNavClick(e, "#contact")}
-                className="mt-2 rounded-full border border-gold px-5 py-2 text-center text-sm font-semibold text-gold transition-all hover:bg-gold hover:text-dark"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{
+                  duration: 0.3,
+                  delay: 0.05 + navLinks.length * 0.07,
+                  ease: "easeOut",
+                }}
+                className="mt-4 rounded-full border border-gold bg-gold/10 px-8 py-3 text-lg font-semibold text-gold shadow-[0_0_24px_rgba(249,219,154,0.2)] transition-all hover:bg-gold hover:text-dark"
               >
                 Get Started
-              </a>
-            </div>
+              </motion.a>
+            </nav>
+
+            {/* Bottom accent line */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              exit={{ scaleX: 0 }}
+              transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+              className="absolute bottom-16 h-px w-2/3 origin-center bg-gradient-to-r from-transparent via-gold/30 to-transparent"
+            />
           </motion.div>
         )}
       </AnimatePresence>

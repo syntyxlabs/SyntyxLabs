@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, useState, useCallback } from "react";
+
+import useIsTouchDevice from "@/hooks/useIsTouchDevice";
 import TiltCard from "./TiltCard";
 
 interface GlowCardProps {
@@ -9,6 +11,7 @@ interface GlowCardProps {
 }
 
 export default function GlowCard({ children, className = "" }: GlowCardProps) {
+  const isTouch = useIsTouchDevice();
   const cardRef = useRef<HTMLDivElement>(null);
   const [glowPosition, setGlowPosition] = useState({ x: 50, y: 50 });
   const [isHovered, setIsHovered] = useState(false);
@@ -32,21 +35,29 @@ export default function GlowCard({ children, className = "" }: GlowCardProps) {
       <div
         ref={cardRef}
         className="relative overflow-hidden rounded-2xl"
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseMove={isTouch ? undefined : handleMouseMove}
+        onMouseEnter={isTouch ? undefined : () => setIsHovered(true)}
+        onMouseLeave={isTouch ? undefined : () => setIsHovered(false)}
       >
-        {/* Glow border effect */}
-        <div
-          className="pointer-events-none absolute inset-0 rounded-2xl transition-opacity duration-500"
-          style={{
-            opacity: isHovered ? 1 : 0,
-            background: `radial-gradient(circle at ${glowPosition.x}% ${glowPosition.y}%, rgba(249, 219, 154, 0.3) 0%, transparent 50%)`,
-          }}
-        />
+        {/* Cursor-following glow on desktop only */}
+        {!isTouch && (
+          <div
+            className="pointer-events-none absolute inset-0 rounded-2xl transition-opacity duration-500"
+            style={{
+              opacity: isHovered ? 1 : 0,
+              background: `radial-gradient(circle at ${glowPosition.x}% ${glowPosition.y}%, rgba(249, 219, 154, 0.3) 0%, transparent 50%)`,
+            }}
+          />
+        )}
 
-        {/* Card content with glass background */}
-        <div className="relative rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+        {/* Card content with glass background — subtle static glow on mobile */}
+        <div
+          className={`relative rounded-2xl bg-white/[0.04] p-6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-md ${
+            isTouch
+              ? "border border-white/[0.12] shadow-[0_0_15px_rgba(249,219,154,0.05),inset_0_1px_0_0_rgba(255,255,255,0.05)]"
+              : "border border-white/[0.08]"
+          }`}
+        >
           {children}
         </div>
       </div>

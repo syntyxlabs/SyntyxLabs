@@ -72,12 +72,12 @@ const highlights = [
 
 export default function About() {
   return (
-    <section id="about" className="relative py-20 md:py-32">
+    <section id="about" className="relative py-12 md:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading title="About Us" />
 
         <ScrollReveal>
-          <p className="mx-auto mb-16 max-w-3xl text-center text-lg leading-relaxed text-gray-400">
+          <p className="mx-auto mb-8 max-w-3xl text-center text-lg leading-relaxed text-gray-400 md:mb-16">
             Syntyx Labs is a forward-thinking software development company
             specializing in AI-driven solutions and custom software. We partner
             with businesses to transform ideas into powerful, scalable technology

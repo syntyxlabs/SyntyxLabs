@@ -2,24 +2,23 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-const CODE_SNIPPET = `// Syntyx Labs — AI-Powered Solutions
+const CODE_SNIPPET = `// Syntyx Labs — Intelligent Agent SDK
+import { Agent } from '@syntyx/agents';
 import { NeuralEngine } from '@syntyx/ai';
-import { Pipeline } from '@syntyx/core';
 
-const engine = new NeuralEngine({
-  model: 'syntyx-v3',
-  temperature: 0.7,
-  maxTokens: 2048,
+const agent = new Agent({
+  name: 'syntyx-orchestrator',
+  model: NeuralEngine.create({
+    version: 'v4-turbo',
+    reasoning: true,
+  }),
+  tools: ['search', 'analyze', 'deploy'],
 });
 
-async function analyzeData(input: string) {
-  const pipeline = new Pipeline([
-    engine.tokenize,
-    engine.embed,
-    engine.predict,
-  ]);
+async function execute(task: string) {
+  const plan = await agent.plan(task);
+  const result = await agent.run(plan);
 
-  const result = await pipeline.run(input);
   return result.insights;
 }`;
 
@@ -35,8 +34,8 @@ function tokenizeLine(line: string): Token[] {
     [/^(import|from|const|let|var|function|async|await|return|new|export|default)\b/, "keyword"],
     [/^('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*`)/, "string"],
     [/^(\d+\.?\d*)/, "number"],
-    [/^(NeuralEngine|Pipeline|string)\b/, "type"],
-    [/^(analyzeData|tokenize|embed|predict|run)\b/, "method"],
+    [/^(Agent|NeuralEngine|Pipeline|string)\b/, "type"],
+    [/^(create|plan|run|execute)\b/, "method"],
     [/^([{}()\[\];:.,=<>])/, "punctuation"],
     [/^(\S+)/, "default"],
     [/^(\s+)/, "default"],
@@ -106,23 +105,23 @@ export default function CodeEditor() {
   const lines = visibleText.split("\n");
 
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-white/10 bg-[#1a1208]/80 shadow-2xl backdrop-blur-sm">
+    <div className="w-full overflow-hidden rounded-xl border border-white/10 bg-[#1a1208]/80 shadow-[0_8px_60px_-12px_rgba(249,219,154,0.15)] backdrop-blur-sm">
       {/* Title bar */}
-      <div className="flex items-center gap-2 border-b border-white/5 px-4 py-3">
+      <div className="flex items-center gap-2 border-b border-white/5 px-3 py-2 sm:px-4 sm:py-3">
         <div className="flex gap-1.5">
-          <div className="h-3 w-3 rounded-full bg-[#ff5f56]" />
-          <div className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
-          <div className="h-3 w-3 rounded-full bg-[#27c93f]" />
+          <div className="h-2.5 w-2.5 rounded-full bg-[#ff5f56] sm:h-3 sm:w-3" />
+          <div className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e] sm:h-3 sm:w-3" />
+          <div className="h-2.5 w-2.5 rounded-full bg-[#27c93f] sm:h-3 sm:w-3" />
         </div>
         <span className="ml-2 text-xs text-gray-500">engine.ts</span>
       </div>
 
       {/* Code area */}
-      <div className="overflow-x-auto p-4 font-mono text-sm leading-6">
+      <div className="overflow-x-auto p-3 font-mono text-xs leading-5 sm:p-4 sm:text-sm sm:leading-6">
         <pre className="whitespace-pre">
           {lines.map((line, lineIndex) => (
             <div key={lineIndex} className="flex">
-              <span className="mr-4 inline-block w-6 select-none text-right text-gray-600">
+              <span className="mr-3 inline-block w-5 select-none text-right text-gray-600 sm:mr-4 sm:w-6">
                 {lineIndex + 1}
               </span>
               <span>

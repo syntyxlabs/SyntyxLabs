@@ -41,15 +41,22 @@ export default function CookieBanner() {
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="currentColor"
-                strokeWidth={1.5}
                 className="mt-0.5 h-5 w-5 shrink-0 text-gold"
               >
-                <circle cx="12" cy="12" r="10" />
-                <circle cx="8" cy="10" r="1" fill="currentColor" />
-                <circle cx="14" cy="8" r="1" fill="currentColor" />
-                <circle cx="10" cy="15" r="1" fill="currentColor" />
-                <circle cx="16" cy="14" r="1" fill="currentColor" />
+                {/* Cookie body */}
+                <path
+                  d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10c0-.34-.02-.674-.054-1.004a2.5 2.5 0 01-2.446-2.446A10.02 10.02 0 0012 2z"
+                  fill="currentColor"
+                  opacity={0.2}
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                />
+                {/* Chocolate chips */}
+                <circle cx="8.5" cy="9.5" r="1.2" fill="currentColor" />
+                <circle cx="13" cy="7" r="1" fill="currentColor" />
+                <circle cx="10" cy="14.5" r="1.2" fill="currentColor" />
+                <circle cx="15" cy="13" r="1" fill="currentColor" />
+                <circle cx="7" cy="12.5" r="0.8" fill="currentColor" />
               </svg>
               <p className="text-sm text-gray-400">
                 This website uses cookies to enhance your browsing experience,

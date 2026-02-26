@@ -23,9 +23,19 @@ export default function SectionHeading({
   return (
     <ScrollReveal>
       <div className={`mb-16 ${alignClass}`}>
-        <h2 className="text-3xl font-bold text-white md:text-4xl lg:text-5xl">
+        <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl lg:text-5xl">
           {title}
         </h2>
+        {/* Gold accent line under heading */}
+        <div
+          className={`animate-shimmer mt-4 h-0.5 w-16 rounded-full bg-gradient-to-r from-gold via-orange-accent to-gold ${
+            align === "center"
+              ? "mx-auto"
+              : align === "right"
+                ? "ml-auto"
+                : ""
+          }`}
+        />
         {subtitle && (
           <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-400">
             {subtitle}

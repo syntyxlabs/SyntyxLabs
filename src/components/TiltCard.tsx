@@ -2,6 +2,8 @@
 
 import { useRef, useState, useCallback } from "react";
 
+import useIsTouchDevice from "@/hooks/useIsTouchDevice";
+
 interface TiltCardProps {
   children: React.ReactNode;
   className?: string;
@@ -13,6 +15,7 @@ export default function TiltCard({
   className = "",
   tiltAmount = 10,
 }: TiltCardProps) {
+  const isTouch = useIsTouchDevice();
   const cardRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState(
     "perspective(1000px) rotateX(0deg) rotateY(0deg)"
@@ -43,6 +46,10 @@ export default function TiltCard({
   const handleMouseLeave = useCallback(() => {
     setTransform("perspective(1000px) rotateX(0deg) rotateY(0deg)");
   }, []);
+
+  if (isTouch) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
     <div

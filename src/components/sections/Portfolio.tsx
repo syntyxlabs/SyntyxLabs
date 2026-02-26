@@ -32,7 +32,7 @@ export default function Portfolio() {
   return (
     <section
       id="portfolio"
-      className="relative px-4 py-20 sm:px-6 md:py-32 lg:px-8"
+      className="relative px-4 py-12 sm:px-6 md:py-32 lg:px-8"
     >
       <div className="mx-auto max-w-7xl">
         <SectionHeading

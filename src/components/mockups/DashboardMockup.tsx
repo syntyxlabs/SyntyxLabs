@@ -77,29 +77,6 @@ export default function DashboardMockup() {
         ))}
       </div>
 
-      {/* SVG Line chart overlay */}
-      <svg
-        className="absolute right-3 bottom-3 h-12 w-24"
-        viewBox="0 0 100 50"
-        fill="none"
-      >
-        <motion.path
-          d="M0 40 Q15 35 25 25 T50 20 T75 10 T100 5"
-          stroke="#F9DB9A"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          fill="none"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            repeatType: "reverse",
-            repeatDelay: 1.5,
-            ease: "easeInOut",
-          }}
-        />
-      </svg>
     </div>
   );
 }
