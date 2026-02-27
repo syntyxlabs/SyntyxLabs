@@ -2,134 +2,96 @@
 
 import { motion } from "framer-motion";
 
-// Define node positions for a 3-4-3 neural network layout
-const layers = [
-  // Input layer (3 nodes)
-  [
-    { x: 15, y: 15 },
-    { x: 15, y: 50 },
-    { x: 15, y: 85 },
-  ],
-  // Hidden layer (4 nodes)
-  [
-    { x: 50, y: 8 },
-    { x: 50, y: 35 },
-    { x: 50, y: 62 },
-    { x: 50, y: 89 },
-  ],
-  // Output layer (3 nodes)
-  [
-    { x: 85, y: 15 },
-    { x: 85, y: 50 },
-    { x: 85, y: 85 },
-  ],
-];
+const pulseKeyframes = {
+  scale: [1, 1.15, 1],
+  opacity: [0.5, 1, 0.5],
+};
 
-// Generate connections between adjacent layers
-function getConnections() {
-  const connections: { x1: number; y1: number; x2: number; y2: number; delay: number }[] = [];
-  let idx = 0;
-
-  for (let l = 0; l < layers.length - 1; l++) {
-    for (const fromNode of layers[l]) {
-      for (const toNode of layers[l + 1]) {
-        connections.push({
-          x1: fromNode.x,
-          y1: fromNode.y,
-          x2: toNode.x,
-          y2: toNode.y,
-          delay: idx * 0.12,
-        });
-        idx++;
-      }
-    }
-  }
-
-  return connections;
-}
-
-const connections = getConnections();
+const barWidths = [85, 72, 93, 60];
+const barLabels = ["Sentiment", "Intent", "Entities", "Context"];
+const barColors = ["#F9DB9A", "#AB59D7", "#F67300", "#F9DB9A"];
 
 export default function NeuralNetworkMockup() {
   return (
-    <div className="relative flex h-48 w-full items-center justify-center overflow-hidden rounded-lg bg-dark-light/80 p-3">
-      <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-        {/* Connection lines */}
-        {connections.map((conn, i) => (
-          <motion.line
-            key={`conn-${i}`}
-            x1={conn.x1}
-            y1={conn.y1}
-            x2={conn.x2}
-            y2={conn.y2}
-            stroke="#F9DB9A"
-            strokeWidth="0.3"
-            initial={{ opacity: 0.05 }}
-            animate={{ opacity: [0.05, 0.3, 0.05] }}
+    <div className="relative h-48 w-full overflow-hidden rounded-lg bg-dark-light/80 p-3">
+      {/* Header */}
+      <div className="relative mb-2.5 flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <motion.div
+            className="h-1.5 w-1.5 rounded-full bg-green-400"
+            animate={pulseKeyframes}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <span className="text-[8px] font-medium text-gray-400">Syntyx Agent</span>
+        </div>
+        <span className="text-[7px] text-gray-600">Processing</span>
+      </div>
+
+      {/* Prompt bubble */}
+      <div className="mb-2 rounded bg-white/5 px-2 py-1">
+        <p className="text-[7px] text-gray-500">
+          <span className="text-gold/70">&#x25B6;</span>{" "}
+          Analyze customer feedback for Q4
+        </p>
+      </div>
+
+      {/* Animated waveform / thinking indicator */}
+      <div className="mb-2.5 flex items-center gap-0.5 px-1">
+        {[...Array(16)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="w-[3px] rounded-full"
+            style={{ backgroundColor: i % 3 === 0 ? "#AB59D7" : "#F9DB9A" }}
+            animate={{
+              height: [4, 8 + Math.random() * 12, 4],
+              opacity: [0.3, 0.8, 0.3],
+            }}
             transition={{
-              duration: 2,
-              delay: conn.delay,
+              duration: 0.8 + Math.random() * 0.6,
+              delay: i * 0.06,
               repeat: Infinity,
               ease: "easeInOut",
             }}
           />
         ))}
+      </div>
 
-        {/* Nodes */}
-        {layers.map((layer, layerIndex) =>
-          layer.map((node, nodeIndex) => {
-            const isGold = layerIndex === 0 || (layerIndex === 1 && nodeIndex % 2 === 0);
-            const color = isGold ? "#F9DB9A" : "#AB59D7";
-
-            return (
-              <g key={`node-${layerIndex}-${nodeIndex}`}>
-                {/* Glow */}
-                <motion.circle
-                  cx={node.x}
-                  cy={node.y}
-                  r="4"
-                  fill={color}
-                  opacity={0.15}
-                  initial={{ r: 3 }}
-                  animate={{ r: [3, 5, 3] }}
-                  transition={{
+      {/* Analysis result bars */}
+      <div className="flex flex-col gap-1.5">
+        {barWidths.map((width, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <span className="w-10 text-right text-[6px] text-gray-600">
+              {barLabels[i]}
+            </span>
+            <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-white/5">
+              <motion.div
+                className="absolute inset-y-0 left-0 rounded-full"
+                style={{ backgroundColor: barColors[i] }}
+                initial={{ width: 0, opacity: 0.7 }}
+                animate={{ width: `${width}%`, opacity: [0.7, 1, 0.7] }}
+                transition={{
+                  width: { duration: 1.5, delay: 0.8 + i * 0.25, ease: "easeOut" },
+                  opacity: {
                     duration: 2,
-                    delay: layerIndex * 0.4 + nodeIndex * 0.2,
+                    delay: 2.3 + i * 0.25,
                     repeat: Infinity,
                     ease: "easeInOut",
-                  }}
-                />
-                {/* Core node */}
-                <motion.circle
-                  cx={node.x}
-                  cy={node.y}
-                  r="2"
-                  fill={color}
-                  initial={{ opacity: 0.6 }}
-                  animate={{ opacity: [0.6, 1, 0.6] }}
-                  transition={{
-                    duration: 2,
-                    delay: layerIndex * 0.4 + nodeIndex * 0.2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
-              </g>
-            );
-          })
-        )}
-
-        {/* Layer labels */}
-        <text x="15" y="98" textAnchor="middle" className="fill-gray-600 text-[4px]">
-          Input
-        </text>
-        <text x="50" y="98" textAnchor="middle" className="fill-gray-600 text-[4px]">
-          Hidden
-        </text>
-        <text x="85" y="98" textAnchor="middle" className="fill-gray-600 text-[4px]">
-          Output
-        </text>
-      </svg>
+                  },
+                }}
+              />
+            </div>
+            <motion.span
+              className="w-6 text-[7px] font-medium"
+              style={{ color: barColors[i] }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1.5 + i * 0.25 }}
+            >
+              {width}%
+            </motion.span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
