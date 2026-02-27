@@ -101,8 +101,14 @@ export default function CodeEditor() {
     return () => clearTimeout(timeout);
   }, [displayedLength, isTyping, resetAndRestart]);
 
-  const visibleText = CODE_SNIPPET.slice(0, displayedLength);
-  const lines = visibleText.split("\n");
+  // Pre-split all lines so the editor height is fixed from mount (no layout shift)
+  const allLines = CODE_SNIPPET.split("\n");
+  const lineStartOffsets: number[] = [];
+  let offset = 0;
+  for (const line of allLines) {
+    lineStartOffsets.push(offset);
+    offset += line.length + 1; // +1 for the \n
+  }
 
   return (
     <div className="w-full overflow-hidden rounded-xl border border-white/10 bg-[#1a1208]/80 shadow-[0_8px_60px_-12px_rgba(249,219,154,0.15)] backdrop-blur-sm">
@@ -116,26 +122,34 @@ export default function CodeEditor() {
         <span className="ml-2 text-xs text-gray-500">engine.ts</span>
       </div>
 
-      {/* Code area */}
+      {/* Code area — all lines pre-rendered so height never changes */}
       <div className="overflow-x-auto p-3 font-mono text-xs leading-5 sm:p-4 sm:text-sm sm:leading-6">
         <pre className="whitespace-pre">
-          {lines.map((line, lineIndex) => (
-            <div key={lineIndex} className="flex">
-              <span className="mr-3 inline-block w-5 select-none text-right text-gray-600 sm:mr-4 sm:w-6">
-                {lineIndex + 1}
-              </span>
-              <span>
-                {tokenizeLine(line).map((token, tokenIndex) => (
-                  <span key={tokenIndex} className={typeColorMap[token.type]}>
-                    {token.text}
-                  </span>
-                ))}
-                {lineIndex === lines.length - 1 && (
-                  <span className="ml-px inline-block h-5 w-[2px] animate-pulse bg-gold align-middle" />
-                )}
-              </span>
-            </div>
-          ))}
+          {allLines.map((fullLine, lineIndex) => {
+            const lineStart = lineStartOffsets[lineIndex];
+            const visibleChars = Math.max(0, Math.min(fullLine.length, displayedLength - lineStart));
+            const visibleText = fullLine.slice(0, visibleChars);
+            const isCurrentLine = displayedLength >= lineStart && displayedLength < lineStart + fullLine.length + 1;
+
+            return (
+              <div key={lineIndex} className="flex">
+                <span className="mr-3 inline-block w-5 select-none text-right text-gray-600 sm:mr-4 sm:w-6">
+                  {lineIndex + 1}
+                </span>
+                <span>
+                  {visibleChars > 0 &&
+                    tokenizeLine(visibleText).map((token, tokenIndex) => (
+                      <span key={tokenIndex} className={typeColorMap[token.type]}>
+                        {token.text}
+                      </span>
+                    ))}
+                  {isCurrentLine && (
+                    <span className="ml-px inline-block h-5 w-[2px] animate-pulse bg-gold align-middle" />
+                  )}
+                </span>
+              </div>
+            );
+          })}
         </pre>
       </div>
     </div>
