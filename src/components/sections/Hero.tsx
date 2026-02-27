@@ -22,8 +22,8 @@ export default function Hero() {
       />
 
       <div className="relative mx-auto flex max-w-7xl flex-col items-center gap-4 lg:flex-row lg:items-center lg:gap-12">
-        {/* Left column — text content */}
-        <div className="flex-1 text-center lg:text-left">
+        {/* Left column — text content (shrink-0 prevents layout shift from code editor) */}
+        <div className="flex-1 shrink-0 text-center lg:text-left">
           <ScrollReveal delay={0.1}>
             <div className="mb-2 inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm text-gray-300 lg:mb-3">
               Empowering Businesses with Technology
@@ -82,7 +82,7 @@ export default function Hero() {
         </div>
 
         {/* Right column — code editor */}
-        <div className="relative w-full max-h-[220px] flex-1 lg:max-h-none lg:max-w-xl overflow-hidden">
+        <div className="relative w-full max-h-[220px] lg:w-[540px] lg:shrink-0 lg:max-h-none overflow-hidden">
           <ScrollReveal direction="right" delay={0.3}>
             <div
               className="lg:[transform:perspective(1200px)_rotateY(-5deg)_rotateX(2deg)]"
