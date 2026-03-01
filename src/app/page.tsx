@@ -6,7 +6,7 @@ import Services from "@/components/sections/Services";
 import Portfolio from "@/components/sections/Portfolio";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/Footer";
-import CookieBanner from "@/components/CookieBanner";
+
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
       <Portfolio />
       <Contact />
       <Footer />
-      <CookieBanner />
+
     </main>
   );
 }

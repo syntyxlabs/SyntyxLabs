@@ -84,11 +84,7 @@ export default function Hero() {
         {/* Right column — code editor */}
         <div className="relative w-full max-h-[220px] lg:w-[540px] lg:shrink-0 lg:max-h-none overflow-hidden">
           <ScrollReveal direction="right" delay={0.3}>
-            <div
-              className="lg:[transform:perspective(1200px)_rotateY(-5deg)_rotateX(2deg)]"
-            >
-              <CodeEditor />
-            </div>
+            <CodeEditor />
           </ScrollReveal>
           {/* Fade-out gradient on mobile so cut-off looks intentional */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-dark to-transparent lg:hidden" />
