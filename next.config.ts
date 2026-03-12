@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  serverExternalPackages: [
+    "framer-motion",
+    "@tsparticles/react",
+    "@tsparticles/slim",
+    "@tsparticles/engine",
+  ],
 };
 
 export default nextConfig;
