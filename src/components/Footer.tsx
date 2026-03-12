@@ -51,6 +51,9 @@ export default function Footer() {
               </p>
               <a
                 href="mailto:info@syntyxlabs.com"
+                data-analytics-event="Contact Email Clicked"
+                data-analytics-location="footer"
+                data-analytics-target="mailto"
                 className="inline-flex items-center gap-2 text-sm text-gold transition-colors hover:text-orange-accent"
               >
                 <svg
@@ -119,6 +122,9 @@ export default function Footer() {
               </p>
               <a
                 href="#contact"
+                data-analytics-event="CTA Clicked"
+                data-analytics-location="footer"
+                data-analytics-target="contact"
                 className="inline-flex items-center gap-2 rounded-full border border-gold/50 px-5 py-2.5 text-sm font-semibold text-gold transition-all hover:bg-gold hover:text-dark hover:shadow-[0_0_24px_rgba(249,219,154,0.25)]"
               >
                 Get in Touch

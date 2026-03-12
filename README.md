@@ -20,6 +20,15 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Analytics
+
+The site uses Vercel Web Analytics via `@vercel/analytics`.
+
+- Enable Web Analytics for the project in the Vercel dashboard before expecting production data.
+- Page views are tracked automatically after deployment to Vercel.
+- Custom events are wired for scroll depth, CTA clicks, contact email clicks, and Formspree contact-form conversions.
+- If the active Vercel plan does not expose custom events, page views will still work but the event dashboards will require the appropriate plan level.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

@@ -54,6 +54,9 @@ export default function Hero() {
             <div className="mt-5 flex flex-col items-center gap-4 sm:flex-row lg:justify-start">
               <a
                 href="#contact"
+                data-analytics-event="CTA Clicked"
+                data-analytics-location="hero"
+                data-analytics-target="contact"
                 className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 font-semibold text-dark shadow-[0_0_20px_rgba(249,219,154,0.2)] transition-shadow duration-300 hover:shadow-[0_0_40px_rgba(249,219,154,0.4)]"
               >
                 Get Started
@@ -73,6 +76,9 @@ export default function Hero() {
               </a>
               <a
                 href="#services"
+                data-analytics-event="CTA Clicked"
+                data-analytics-location="hero"
+                data-analytics-target="services"
                 className="inline-flex items-center rounded-full border border-white/30 px-6 py-3 text-white transition-colors duration-300 hover:border-gold"
               >
                 Our Services

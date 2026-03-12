@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useSpring } from "framer-motion";
 
 export default function CustomCursor() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const posRef = useRef({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
   const [isPointer, setIsPointer] = useState(false);
+  const [renderPos, setRenderPos] = useState({ x: 0, y: 0 });
 
   const springConfig = { damping: 25, stiffness: 250, mass: 0.5 };
   const trailX = useSpring(0, springConfig);
@@ -18,21 +19,28 @@ export default function CustomCursor() {
       "ontouchstart" in window || navigator.maxTouchPoints > 0;
     if (isTouchDevice || window.innerWidth < 768) return;
 
+    let rafId = 0;
+    let dirty = false;
+
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      posRef.current = { x: e.clientX, y: e.clientY };
       trailX.set(e.clientX);
       trailY.set(e.clientY);
-      if (!isVisible) setIsVisible(true);
+      if (!dirty) {
+        dirty = true;
+        rafId = requestAnimationFrame(() => {
+          setRenderPos({ ...posRef.current });
+          dirty = false;
+        });
+      }
+      setIsVisible(true);
     };
 
     const handleMouseLeave = () => setIsVisible(false);
     const handleMouseEnter = () => setIsVisible(true);
 
-    const handlePointerCheck = () => {
-      const hoveredEl = document.elementFromPoint(
-        mousePosition.x,
-        mousePosition.y
-      );
+    const handlePointerCheck = (e: MouseEvent) => {
+      const hoveredEl = document.elementFromPoint(e.clientX, e.clientY);
       if (hoveredEl) {
         const computed = window.getComputedStyle(hoveredEl);
         setIsPointer(computed.cursor === "pointer");
@@ -45,12 +53,13 @@ export default function CustomCursor() {
     window.addEventListener("mouseover", handlePointerCheck);
 
     return () => {
+      cancelAnimationFrame(rafId);
       window.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
       window.removeEventListener("mouseover", handlePointerCheck);
     };
-  }, [isVisible, mousePosition.x, mousePosition.y, trailX, trailY]);
+  }, [trailX, trailY]);
 
   if (!isVisible) return null;
 
@@ -60,8 +69,8 @@ export default function CustomCursor() {
       <div
         className="pointer-events-none fixed z-[9999] hidden md:block"
         style={{
-          left: mousePosition.x - 4,
-          top: mousePosition.y - 4,
+          left: renderPos.x - 4,
+          top: renderPos.y - 4,
           width: isPointer ? 12 : 8,
           height: isPointer ? 12 : 8,
           backgroundColor: "#F9DB9A",

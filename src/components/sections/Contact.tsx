@@ -1,12 +1,30 @@
 "use client";
 
 import { useForm, ValidationError } from "@formspree/react";
+import { useEffect, useRef } from "react";
 import ScrollReveal from "@/components/ScrollReveal";
 import GlowCard from "@/components/GlowCard";
 import SectionHeading from "@/components/SectionHeading";
+import {
+  trackContactFormStarted,
+  trackContactFormSubmitted,
+} from "@/lib/analytics";
 
 export default function Contact() {
   const [state, handleSubmit] = useForm("mvzblnqb");
+  const hasTrackedSuccess = useRef(false);
+
+  useEffect(() => {
+    if (state.succeeded && !hasTrackedSuccess.current) {
+      hasTrackedSuccess.current = true;
+      trackContactFormSubmitted();
+    }
+  }, [state.succeeded]);
+
+  const handleTrackedSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    trackContactFormStarted();
+    void handleSubmit(event);
+  };
 
   return (
     <section id="contact" className="relative py-12 md:py-32">
@@ -17,6 +35,9 @@ export default function Contact() {
           <div className="mb-6 text-center md:mb-12">
             <a
               href="mailto:info@syntyxlabs.com"
+              data-analytics-event="Contact Email Clicked"
+              data-analytics-location="contact"
+              data-analytics-target="mailto"
               className="text-2xl font-semibold text-gold transition-all hover:underline"
             >
               info@syntyxlabs.com
@@ -37,7 +58,10 @@ export default function Contact() {
                   </p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                <form
+                  onSubmit={handleTrackedSubmit}
+                  className="flex flex-col gap-5"
+                >
                   <div>
                     <label
                       htmlFor="name"
@@ -101,6 +125,9 @@ export default function Contact() {
                   <button
                     type="submit"
                     disabled={state.submitting}
+                    data-analytics-event="CTA Clicked"
+                    data-analytics-location="contact-form"
+                    data-analytics-target="submit"
                     className="mx-auto rounded-full bg-gold px-8 py-3 font-semibold text-dark transition-shadow hover:shadow-[0_0_30px_rgba(249,219,154,0.3)] disabled:opacity-60"
                   >
                     {state.submitting ? "Sending..." : "Send Message"}

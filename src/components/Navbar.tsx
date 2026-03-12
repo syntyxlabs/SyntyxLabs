@@ -119,6 +119,9 @@ export default function Navbar() {
         <a
           href="#contact"
           onClick={(e) => handleNavClick(e, "#contact")}
+          data-analytics-event="CTA Clicked"
+          data-analytics-location="navbar"
+          data-analytics-target="contact"
           className="hidden rounded-full border border-gold px-5 py-2 text-sm font-semibold text-gold transition-all hover:bg-gold hover:text-dark md:block"
         >
           Get Started
@@ -200,6 +203,9 @@ export default function Navbar() {
               <motion.a
                 href="#contact"
                 onClick={(e) => handleNavClick(e, "#contact")}
+                data-analytics-event="CTA Clicked"
+                data-analytics-location="mobile-menu"
+                data-analytics-target="contact"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}

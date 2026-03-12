@@ -1,11 +1,22 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import ScrollReveal from "@/components/ScrollReveal";
 import GlowCard from "@/components/GlowCard";
 import SectionHeading from "@/components/SectionHeading";
-import DashboardMockup from "@/components/mockups/DashboardMockup";
-import NeuralNetworkMockup from "@/components/mockups/NeuralNetworkMockup";
-import MobileAppMockup from "@/components/mockups/MobileAppMockup";
+
+const DashboardMockup = dynamic(
+  () => import("@/components/mockups/DashboardMockup"),
+  { ssr: false, loading: () => <div className="h-48 w-full rounded-lg bg-dark-light/80" /> }
+);
+const NeuralNetworkMockup = dynamic(
+  () => import("@/components/mockups/NeuralNetworkMockup"),
+  { ssr: false, loading: () => <div className="h-48 w-full rounded-lg bg-dark-light/80" /> }
+);
+const MobileAppMockup = dynamic(
+  () => import("@/components/mockups/MobileAppMockup"),
+  { ssr: false, loading: () => <div className="h-48 w-full rounded-lg bg-dark-light/80" /> }
+);
 
 const capabilities = [
   {

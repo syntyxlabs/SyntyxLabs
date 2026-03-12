@@ -21,10 +21,10 @@ export default function ParticleBackground() {
   const options: ISourceOptions = useMemo(
     () => ({
       fullScreen: false,
-      fpsLimit: 60,
+      fpsLimit: isMobile ? 30 : 60,
       particles: {
         number: {
-          value: isMobile ? 60 : 100,
+          value: isMobile ? 30 : 80,
           density: {
             enable: true,
           },
@@ -65,7 +65,7 @@ export default function ParticleBackground() {
         detectsOn: "window",
         events: {
           onHover: {
-            enable: true,
+            enable: !isMobile,
             mode: "grab",
           },
         },

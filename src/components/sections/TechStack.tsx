@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
 
@@ -113,6 +114,9 @@ const technologies: Tech[] = [
 ];
 
 export default function TechStack() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(scrollRef, { margin: "100px" });
+
   return (
     <section className="relative py-10 md:py-24">
       {/* Subtle top/bottom gradient borders */}
@@ -128,7 +132,7 @@ export default function TechStack() {
         </ScrollReveal>
 
         {/* Scrolling tech row */}
-        <div className="relative mt-6 overflow-hidden md:mt-12">
+        <div ref={scrollRef} className="relative mt-6 overflow-hidden md:mt-12">
           {/* Fade edges */}
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-dark to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-dark to-transparent" />
@@ -136,7 +140,7 @@ export default function TechStack() {
           {/* Infinite scroll animation */}
           <motion.div
             className="flex gap-4 sm:gap-8"
-            animate={{ x: ["0%", "-50%"] }}
+            animate={isInView ? { x: ["0%", "-50%"] } : undefined}
             transition={{
               x: {
                 duration: 20,

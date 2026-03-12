@@ -184,9 +184,9 @@ export default function NeuralNetworkMockup() {
           </g>
         ))}
 
-        {/* Neural network connections */}
+        {/* Neural network connections (static for performance) */}
         {edges.map(([a, b], i) => (
-          <motion.line
+          <line
             key={`e-${i}`}
             x1={nodes[a][0]}
             y1={nodes[a][1]}
@@ -194,13 +194,7 @@ export default function NeuralNetworkMockup() {
             y2={nodes[b][1]}
             stroke={GOLD}
             strokeWidth={0.6}
-            animate={{ strokeOpacity: [0.04, 0.18, 0.04] }}
-            transition={{
-              duration: 3,
-              delay: (i % 20) * 0.15,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            strokeOpacity={0.12}
           />
         ))}
 
@@ -232,22 +226,15 @@ export default function NeuralNetworkMockup() {
           );
         })}
 
-        {/* Neural network nodes */}
+        {/* Neural network nodes (static for performance) */}
         {nodes.map(([x, y], i) => (
-          <motion.circle
+          <circle
             key={`n-${i}`}
             cx={x}
             cy={y}
             r={i < 24 ? 2.2 : 1.6}
             fill={nodeColors[i]}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0.3, 0.9, 0.3] }}
-            transition={{
-              duration: 2.5,
-              delay: 0.5 + (i % 12) * 0.18,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            opacity={0.6}
           />
         ))}
 
