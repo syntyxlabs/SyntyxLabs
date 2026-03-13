@@ -75,18 +75,12 @@ const typeColorMap: Record<Token["type"], string> = {
 
 export default function CodeEditor() {
   const [displayedLength, setDisplayedLength] = useState(0);
-  const [isTyping, setIsTyping] = useState(true);
-
   const resetAndRestart = useCallback(() => {
     setDisplayedLength(0);
-    setIsTyping(true);
   }, []);
 
   useEffect(() => {
-    if (!isTyping) return;
-
     if (displayedLength >= CODE_SNIPPET.length) {
-      setIsTyping(false);
       const timeout = setTimeout(resetAndRestart, 3000);
       return () => clearTimeout(timeout);
     }
@@ -99,7 +93,7 @@ export default function CodeEditor() {
     }, delay);
 
     return () => clearTimeout(timeout);
-  }, [displayedLength, isTyping, resetAndRestart]);
+  }, [displayedLength, resetAndRestart]);
 
   // Pre-split all lines so the editor height is fixed from mount (no layout shift)
   const allLines = CODE_SNIPPET.split("\n");

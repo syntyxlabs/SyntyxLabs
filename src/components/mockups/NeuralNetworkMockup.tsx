@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 const PURPLE = "#AB59D7";
 const GOLD = "#F9DB9A";

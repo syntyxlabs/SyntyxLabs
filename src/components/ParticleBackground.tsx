@@ -15,7 +15,18 @@ export default function ParticleBackground() {
     }).then(() => {
       setInit(true);
     });
-    setIsMobile(window.innerWidth < 768);
+
+    const updateIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    const frameId = window.requestAnimationFrame(updateIsMobile);
+    window.addEventListener("resize", updateIsMobile);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.removeEventListener("resize", updateIsMobile);
+    };
   }, []);
 
   const options: ISourceOptions = useMemo(
